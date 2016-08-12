@@ -1,7 +1,13 @@
 #!/bin/bash
+
+#avrdude -c avrisp2 -p m328p -P /dev/ttyUSB0 -U lfuse:r:test3.hex:h
 state=0
 
-USB_DEV="/dev/ttyUSB9"
+USB_DEV=$(ls /dev/ttyUSB*)
+echo $USB_DEV
+echo $USB_DEV
+echo $USB_DEV
+#USB_DEV="/dev/ttyUSB0"
 
 while :
 do
@@ -11,9 +17,9 @@ do
 		then
 			echo "Uploading..."
 			sleep 0.5
-			avrdude -c avrisp2 -p atmega328p -P $USB_DEV -b 115200 -e -u -U lock:w:0x3f:m -U efuse:w:0x05:m -U hfuse:w:0xDE:m -U lfuse:w:0xFF:m
-			avrdude -c avrisp2 -p atmega328p -P $USB_DEV -b 115200 -U flash:w:optiboot_atmega328.hex:i -U lock:w:0x0f:m
-			avrdude -c avrisp2 -p atmega328p -P $USB_DEV -b 115200 -D -U flash:w:show_main.hex:i
+			avrdude -c avrisp2 -p atmega328p -P $USB_DEV -B 4 -e -U efuse:w:0xFF:m -U hfuse:w:0xD8:m -U lfuse:w:0xff:m
+			avrdude -c avrisp2 -p atmega328p -P $USB_DEV -U flash:w:optiboot_atmega328.hex:i
+			avrdude -c avrisp2 -p atmega328p -P $USB_DEV -D -U flash:w:show_main.hex:i
 			state=1
 		else
 			echo "Disconnect your SHOW."
